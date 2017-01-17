@@ -14,12 +14,12 @@ export const toggleTodo = (id) => ({
 });
 
 export const requestTodos = (filter) => ({
-  type: 'REQUEST_TODOS',
+  type: 'FETCH_TODOS_REQUEST',
   filter,
 });
 
 export const receiveTodos = (filter, response) => ({
-  type: 'RECEIVE_TODOS',
+  type: 'FETCH_TODOS_SUCCESS',
   filter,
   response,
 });
@@ -31,7 +31,20 @@ export const fetchTodos = (filter) => (dispatch, getState) => {
 
   dispatch(requestTodos(filter));
 
-  return api.fetchTodos(filter).then(response =>
-    dispatch(receiveTodos(filter, response))
+  return api.fetchTodos(filter).then(
+    response => {
+      dispatch({
+        type: 'FETCH_TODOS_SUCCESS',
+        filter,
+        response,
+      });
+    },
+    error => {
+      dispatch({
+        type: 'FETCH_TODOS_FAILURE',
+        filter,
+        message: error.message || 'Something went wrong.',
+      });
+    }
   );
 }

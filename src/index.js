@@ -1,39 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
-import throttle from 'lodash/throttle'
 
-import todoApp from './reducers';
-import AddTodo from './components/AddTodo';
-import VisibleTodoList from './components/VisibleTodoList';
-import Footer from './components/Footer';
-import { loadState, saveState } from './localStorage'
+import configureStore from './configureStore';
+import Root from './components/Root'
 
-const TodoApp = () => (
-  <div>
-    <AddTodo />
-    <VisibleTodoList />
-    <Footer />
-  </div>
-);
 
-const persistedState = loadState();
 
-const store = createStore(
-  todoApp,
-  persistedState
-)
-
-store.subscribe(throttle(() => {
-  saveState({
-    todos: store.getState().todos
-  })
-}, 1000));
+const store = configureStore();
 
 ReactDOM.render(
-  <Provider store={store}>
-    <TodoApp />
-  </Provider>,
+  <Root store={store}/>,
   document.getElementById('root')
 );

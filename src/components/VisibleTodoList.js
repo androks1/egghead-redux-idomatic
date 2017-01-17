@@ -3,28 +3,38 @@ const { Component } = React;
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import TodoList from './TodoList';
-import { toggleTodo } from '../actions';
+// Before: import { toggleTodo, receiveTodos } from '../actions';
+import * as actions from '../actions' // After
 import { getVisibleTodos } from '../reducers';
 import { fetchTodos } from '../api';
 
 
 class VisibleTodoList extends Component {
   componentDidMount() {
-    fetchTodos(this.props.filter).then(todos =>
-      console.log(this.props.filter, todos)
-    );
+    this.fetchData();
   }
 
   componentDidUpdate(prevProps) {
-   if (this.props.filter !== prevProps.filter) {
-     fetchTodos(this.props.filter).then(todos =>
-       console.log(this.props.filter, todos)
-     );
-   }
- }
+    if (this.props.filter !== prevProps.filter) {
+      this.fetchData();
+    }
+  }
+
+  fetchData() {
+    const { filter, receiveTodos } = this.props;
+    fetchTodos(filter).then(todos =>
+      receiveTodos(filter, todos)
+    );
+  }
 
   render() {
-    return <TodoList {...this.props} />;
+    const { toggleTodo, ...rest } = this.props;
+    return (
+      <TodoList
+        {...rest}
+        onTodoClick={toggleTodo}
+      />
+    )
   }
 }
 
@@ -38,7 +48,8 @@ const mapStateToProps = (state, { params }) => {
 
 VisibleTodoList = withRouter(connect(
   mapStateToProps,
-  { onTodoClick: toggleTodo } /*mapDispatchToProps*/
+  // Before: { onTodoClick: toggleTodo, receiveTodos }
+  actions // After /*mapDispatchToProps*/
 )(VisibleTodoList));
 
 export default VisibleTodoList;

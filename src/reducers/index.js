@@ -37,7 +37,7 @@ const todos = (state = [], action) => {
 };
 
 const visibilityFilter = (
-    state = 'SHOW_ALL',
+    state = 'all',
     action
 ) => {
     switch (action.type) {

@@ -6,7 +6,6 @@ import TodoList from './TodoList';
 // Before: import { toggleTodo, receiveTodos } from '../actions';
 import * as actions from '../actions' // After
 import { getVisibleTodos } from '../reducers';
-import { fetchTodos } from '../api';
 
 
 class VisibleTodoList extends Component {
@@ -21,10 +20,8 @@ class VisibleTodoList extends Component {
   }
 
   fetchData() {
-    const { filter, receiveTodos } = this.props;
-    fetchTodos(filter).then(todos =>
-      receiveTodos(filter, todos)
-    );
+    const { filter, fetchTodos } = this.props;
+    fetchTodos(filter);
   }
 
   render() {
